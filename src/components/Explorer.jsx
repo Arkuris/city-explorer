@@ -1,4 +1,5 @@
 import React from 'react';
+// import Map from './Map.jsx';
 
 class Explorer extends React.Component {
 

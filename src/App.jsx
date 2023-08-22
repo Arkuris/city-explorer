@@ -3,6 +3,8 @@ import React from 'react';
 import './App.css'
 import Explorer from './components/Explorer.jsx';
 import axios from 'axios';
+// import Map from './components/Map.jsx'; 
+
 // Vites way of loading files from a .env file -> requires "VITE_" to be used at the beginning of your key
 const API_KEY = import.meta.env.VITE_city_explorer_api_key;
 
@@ -52,6 +54,8 @@ class App extends React.Component {
             </button>
           </form>
           <Explorer location={this.state.location} query={this.state.searchQuery} />
+          <p>Latitude: {this.state.location ? this.state.location.lat: null}</p>
+          <p>Longitude: {this.state.location ? this.state.location.lon: null}</p>
       </>
     )
   }
