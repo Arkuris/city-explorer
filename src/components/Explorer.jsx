@@ -10,7 +10,6 @@ class Explorer extends React.Component {
     let lat = location ? location.lat : '';
     let lon = location ? location.lon : '';
     const staticMapUrl = `https://maps.locationiq.com/v3/staticmap?key=${API_KEY}&center=${lat},${lon}$zoom=9`;
-
     return (
       <main>
         <section>
