@@ -7,6 +7,7 @@ import axios from 'axios';
 
 // Vites way of loading files from a .env file -> requires "VITE_" to be used at the beginning of your key
 const API_KEY = import.meta.env.VITE_city_explorer_api_key;
+const serverUrl = import.meta.env.VITE_city_explorer_server_url;
 
 class App extends React.Component {
   constructor() {
@@ -29,6 +30,8 @@ class App extends React.Component {
       .then(response => {
         console.log('SUCCESS: ', response.data);
         this.setState({ location: response.data[0] });
+        const {lat,lon} = response.data[0];
+        axios.get(serverUrl+`/weather?lat=${lat}&lon=${lon}`)
       }).catch(error => {
         console.log('UGH OOOOH:', error);
       });
