@@ -2,12 +2,15 @@
 import React from 'react';
 import './App.css'
 import Explorer from './components/Explorer.jsx';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import axios from 'axios';
+import WeatherComponent from './components/Weather';
 // import Map from './components/Map.jsx'; 
 
 // Vites way of loading files from a .env file -> requires "VITE_" to be used at the beginning of your key
 const API_KEY = import.meta.env.VITE_city_explorer_api_key;
-const serverUrl = import.meta.env.VITE_city_explorer_server_url;
+const serverUrl = import.meta.env.VITE_server_url;
 
 class App extends React.Component {
   constructor() {
@@ -32,8 +35,12 @@ class App extends React.Component {
         this.setState({ location: response.data[0] });
         const {lat,lon} = response.data[0];
         axios.get(serverUrl+`/weather?lat=${lat}&lon=${lon}`)
+        .then(response => {
+          console.log('WE FOUND THE WEATHER', response.data)
+          this.setState({ weatherData: response.data });
+        })
       }).catch(error => {
-        console.log('UGH OOOOH:', error);
+        console.log('Something Went Wrong!:', error);
       });
   }
 
@@ -47,18 +54,19 @@ class App extends React.Component {
     console.log('CITY EXPLORER', this.state);
     return (
       <>
-        <header>
-          <h1>Welcome to City Explorer!</h1>
-        </header>
+          <Header />
           <form onSubmit={this.handleForm}>
             <input placeholder="Enter City Name" type="text" name="city" onChange={this.handleChange} />
             <button type='submit'>
               Search
             </button>
           </form>
-          <Explorer location={this.state.location} query={this.state.searchQuery} />
-          <p>Latitude: {this.state.location ? this.state.location.lat: null}</p>
-          <p>Longitude: {this.state.location ? this.state.location.lon: null}</p>
+          <div>
+            {this.state.weatherData && <WeatherComponent weatherData={this.state.weatherData} />}
+            <Explorer location={this.state.location} query={this.state.searchQuery} />
+            <p>Latitude: {this.state.location ? this.state.location.lat: null}</p>
+            <p>Longitude: {this.state.location ? this.state.location.lon: null}</p>
+          </div>
       </>
     )
   }
