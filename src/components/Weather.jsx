@@ -1,14 +1,6 @@
 import React from 'react';
 
-
 class WeatherComponent extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     weatherData: null,
-  //   };
-  // }
-
 
   render() {
     const { weatherData } = this.props;

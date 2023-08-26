@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import axios from 'axios';
 import WeatherComponent from './components/Weather';
+import MovieComponent from './components/Movie';
 // import Map from './components/Map.jsx'; 
 
 // Vites way of loading files from a .env file -> requires "VITE_" to be used at the beginning of your key
@@ -16,8 +17,10 @@ class App extends React.Component {
   constructor() {
     super();
     this.state= {
-      searchQuery: '',
       location: null,
+      weather: null,
+      movies: null,
+      error: null,
     }
   }
 
@@ -29,15 +32,25 @@ class App extends React.Component {
     console.log('Form Submitted');
     e.preventDefault();
     console.log(API_KEY);
-    axios.get(`https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${this.state.searchQuery}&format=json`)
-      .then(response => {
+
+      axios.get(`https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${this.state.searchQuery}&format=json`)
+        .then(response => {
         console.log('SUCCESS: ', response.data);
         this.setState({ location: response.data[0] });
         const {lat,lon} = response.data[0];
-        axios.get(serverUrl+`/weather?lat=${lat}&lon=${lon}`)
+        // const {searchQuery} = response.data[0];
+
+      axios.get(serverUrl+`/weather?lat=${lat}&lon=${lon}`)
         .then(response => {
           console.log('WE FOUND THE WEATHER', response.data)
           this.setState({ weatherData: response.data });
+
+      axios.get(serverUrl+`/movie?query=${location}`)
+          .then(response => {
+            console.log('MOVIES DATA', response.data);
+            this.setState({ movie: response.data })
+          })
+
         })
       }).catch(error => {
         console.log('Something Went Wrong!:', error);
@@ -63,7 +76,11 @@ class App extends React.Component {
           </form>
           <div>
             {this.state.weatherData && <WeatherComponent weatherData={this.state.weatherData} />}
+
             <Explorer location={this.state.location} query={this.state.searchQuery} />
+
+            {this.state.movieData && <MovieComponent movieData={this.state.movieData} />}
+
             <p>Latitude: {this.state.location ? this.state.location.lat: null}</p>
             <p>Longitude: {this.state.location ? this.state.location.lon: null}</p>
           </div>
